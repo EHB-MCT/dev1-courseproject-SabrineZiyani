@@ -43,9 +43,17 @@ function drawPhone() {
     // Draw small rectangles (apps) with random colors
     for (let i = 0; i < 4; i++) {
         for (let j = 0; j < 3; j++) {
-            context.fillStyle = getRandomColor();
-            context.fillRect(585 + j * 100, 120 + i * 100, 80, 80);
+
+            drawApp(585 + j * 100, 120 + i * 100)
+            //  context.fillStyle = getRandomColor();
+            //  context.fillRect(585 + j * 100, 120 + i * 100, 80, 80);
 
         }
     }
+}
+
+function drawApp(x, y) {
+
+    context.fillStyle = getRandomColor();
+    context.fillRect(x, y, 80, 80);
 }

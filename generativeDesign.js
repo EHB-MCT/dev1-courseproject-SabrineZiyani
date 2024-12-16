@@ -1,9 +1,15 @@
 "use strict";
 /** @type {CanvasRenderingContext2D} */
 let context;
+let canvas;
+
+
+const apps = [];
 
 setup();
 drawPhone();
+canvas.addEventListener("mousemove", handleMouseMove);
+
 
 function setup() {
     let canvas = document.querySelector("canvas");
@@ -57,3 +63,5 @@ function drawApp(x, y) {
     context.fillStyle = getRandomColor();
     context.fillRect(x, y, 80, 80);
 }
+
+

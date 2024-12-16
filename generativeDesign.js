@@ -103,3 +103,26 @@ function handleMouseMove(event) {
     });
 }
 
+function handleMouseClick(event) {
+    // Get mouse position to the canvas
+    const rect = canvas.getBoundingClientRect();
+    const mouseX = event.clientX - rect.left;
+    const mouseY = event.clientY - rect.top;
+
+    // Check if the click is inside the home button bounds
+    const isHomeButtonClicked = mouseX >= homeButton.x && mouseX <= homeButton.x + homeButton.width &&
+        mouseY >= homeButton.y && mouseY <= homeButton.y + homeButton.height;
+
+    if (isHomeButtonClicked) {
+        // Change the color of all apps
+        apps.forEach(app => {
+            app.color = getRandomColor();
+        });
+
+        // Redraw the phone and apps
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        drawBackground(mouseX, mouseY);
+        drawPhone();
+    }
+}
+

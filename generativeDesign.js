@@ -18,6 +18,9 @@ function setup() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     context = canvas.getContext("2d");
+
+    // Ensure the Space Invader is drawn every time the page loads
+    drawSpaceinvader();
 }
 
 function getRandomColor() {
@@ -68,6 +71,46 @@ function drawPhone() {
     }
 }
 
+function drawSpaceinvader() {
+    const scale = 0.4; // Scale down the entire Space Invader to fit inside the black box
+    const originalWidth = 300; // Original width of the Space Invader
+    const originalHeight = 300; // Original height of the Space Invader
+
+    // Position the black box in the bottom-right corner of the canvas
+    const offsetX = canvas.width - originalWidth * scale - 20; // 20px margin from right
+    const offsetY = canvas.height - originalHeight * scale - 20; // 20px margin from bottom
+
+    // Draw the black box in the correct position 
+    context.fillStyle = "#F5E3C7 ";
+    context.fillRect(offsetX, offsetY, originalWidth * scale, originalHeight * scale);
+
+    // Calculate the center of the black box
+    const centerX = offsetX + (originalWidth * scale) / 2;
+    const centerY = offsetY + (originalHeight * scale) / 2;
+
+    // Adjust the positions of the blocks to be in the center of the black box
+
+    context.fillStyle = "#E0B49D";
+
+    // Main mid-line block (scaled and centered within the black box)
+    context.fillRect(centerX - 125 * scale, centerY - 75 * scale, 250 * scale, 50 * scale);
+
+    // Top center block
+    context.fillRect(centerX - 25 * scale, centerY - 125 * scale, 50 * scale, 50 * scale);
+
+    // Bottom-left block
+    context.fillRect(centerX - 125 * scale, centerY + 75 * scale, 50 * scale, 50 * scale);
+
+    // Bottom-right block
+    context.fillRect(centerX + 75 * scale, centerY + 75 * scale, 50 * scale, 50 * scale);
+
+    // Mid-left block
+    context.fillRect(centerX - 75 * scale, centerY + 25 * scale, 50 * scale, 50 * scale);
+
+    // Mid-right block
+    context.fillRect(centerX + 25 * scale, centerY + 25 * scale, 50 * scale, 50 * scale);
+}
+
 function drawApp(app, isHovered = false) {
     if (isHovered) {
         app.color = getRandomColor(); // Change color only on hover
@@ -94,13 +137,16 @@ function handleMouseMove(event) {
     drawPhone();
 
     apps.forEach(app => {
-        // Only hover if the mouse is within the app bounds
+        // Only hover if the mouse is within the app 
         let isHovered = mouseX >= app.x && mouseX <= app.x + app.width &&
             mouseY >= app.y && mouseY <= app.y + app.height;
 
         // Only redraw the app if it is hovered
         drawApp(app, isHovered);
     });
+
+    // Redraw the Space Invader in the bottom-right corner
+    drawSpaceinvader();
 }
 
 function handleMouseClick(event) {
@@ -109,20 +155,22 @@ function handleMouseClick(event) {
     const mouseX = event.clientX - rect.left;
     const mouseY = event.clientY - rect.top;
 
-    // Check if the click is inside the home button bounds
+    // Check if the click is inside the home button 
     const isHomeButtonClicked = mouseX >= homeButton.x && mouseX <= homeButton.x + homeButton.width &&
         mouseY >= homeButton.y && mouseY <= homeButton.y + homeButton.height;
 
     if (isHomeButtonClicked) {
-        // Change the color of all apps
+        // Changes the color of all apps
         apps.forEach(app => {
             app.color = getRandomColor();
         });
 
-        // Redraw the phone and apps
+        // Redraw the phone and apps without clearing the Space Invader
         context.clearRect(0, 0, canvas.width, canvas.height);
         drawBackground(mouseX, mouseY);
         drawPhone();
+        // Redraw the Space Invader (it will still be in the bottom-right corner)
+        drawSpaceinvader();
     }
 }
 

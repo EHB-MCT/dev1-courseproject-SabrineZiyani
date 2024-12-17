@@ -162,4 +162,4 @@ function drawBackground(mouseX, mouseY) {
 
 
 
-
+// hoorcolleges gebruikt, dev solutions, hulp gevraagt aan klasgenoten en youtube/google gebruikt voor uitleg

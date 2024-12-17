@@ -4,9 +4,10 @@ let context;
 let canvas;
 
 const apps = [];
-
-// Home button position and size
 const homeButton = { x: 690, y: 530, width: 50, height: 50 };
+
+// Store the default color of the "name" text
+let nameColor = "black"; // 
 
 setup();
 drawPhone();
@@ -19,13 +20,13 @@ function setup() {
     canvas.height = window.innerHeight;
     context = canvas.getContext("2d");
 
-    // Ensure the Space Invader is drawn every time the page loads
+    // Draw the Space Invader and the name text on load
     drawSpaceinvader();
+    drawNameText();
 }
 
 function getRandomColor() {
-    // Generate a random color
-    let letters = '0123456789ABCDEF';
+    const letters = '0123456789ABCDEF';
     let color = '#';
     for (let i = 0; i < 6; i++) {
         color += letters[Math.floor(Math.random() * 16)];
@@ -33,33 +34,12 @@ function getRandomColor() {
     return color;
 }
 
-function drawBackground(mouseX, mouseY) {
-    const gradient = context.createRadialGradient(mouseX, mouseY, 50, mouseX, mouseY, 300);
-    gradient.addColorStop(0, getRandomColor());
-    gradient.addColorStop(1, "#000000");
-
-    context.fillStyle = gradient;
-    context.fillRect(0, 0, canvas.width, canvas.height);
-}
-
 function drawPhone() {
-    // Draw the outer black rectangle
     context.fillStyle = 'black';
     context.fillRect(550, 100, 350, 500);
-
-    // Draw the inner white rectangle
     context.fillStyle = 'white';
     context.fillRect(560, 110, 330, 480);
 
-    // Draw the horizontal black rectangle
-    context.fillStyle = 'black';
-    context.fillRect(560, 510, 330, 10);
-
-    // Draw the button black rectangle (home button)
-    context.fillStyle = 'black';
-    context.fillRect(homeButton.x, homeButton.y, homeButton.width, homeButton.height);
-
-    // Draw small rectangles (apps) with random colors
     for (let i = 0; i < 4; i++) {
         for (let j = 0; j < 3; j++) {
             let x = 585 + j * 100;
@@ -69,46 +49,31 @@ function drawPhone() {
             drawApp(app);
         }
     }
+
+    context.fillStyle = 'black';
+    context.fillRect(homeButton.x, homeButton.y, homeButton.width, homeButton.height);
 }
 
 function drawSpaceinvader() {
-    const scale = 0.4; // Scale down the entire Space Invader to fit inside the black box
-    const originalWidth = 300; // Original width of the Space Invader
-    const originalHeight = 300; // Original height of the Space Invader
+    const scale = 0.4;
+    const originalWidth = 300;
+    const originalHeight = 300;
+    const offsetX = canvas.width - originalWidth * scale - 20;
+    const offsetY = canvas.height - originalHeight * scale - 20;
 
-    // Position the black box in the bottom-right corner of the canvas
-    const offsetX = canvas.width - originalWidth * scale - 20; // 20px margin from right
-    const offsetY = canvas.height - originalHeight * scale - 20; // 20px margin from bottom
-
-    // Draw the black box in the correct position 
-    context.fillStyle = "#F5E3C7 ";
+    context.fillStyle = "#F5E3C7";
     context.fillRect(offsetX, offsetY, originalWidth * scale, originalHeight * scale);
 
-    // Calculate the center of the black box
     const centerX = offsetX + (originalWidth * scale) / 2;
     const centerY = offsetY + (originalHeight * scale) / 2;
 
-    // Adjust the positions of the blocks to be in the center of the black box
-
     context.fillStyle = "#E0B49D";
-
-    // Main mid-line block (scaled and centered within the black box)
-    context.fillRect(centerX - 125 * scale, centerY - 75 * scale, 250 * scale, 50 * scale);
-
-    // Top center block
-    context.fillRect(centerX - 25 * scale, centerY - 125 * scale, 50 * scale, 50 * scale);
-
-    // Bottom-left block
-    context.fillRect(centerX - 125 * scale, centerY + 75 * scale, 50 * scale, 50 * scale);
-
-    // Bottom-right block
-    context.fillRect(centerX + 75 * scale, centerY + 75 * scale, 50 * scale, 50 * scale);
-
-    // Mid-left block
-    context.fillRect(centerX - 75 * scale, centerY + 25 * scale, 50 * scale, 50 * scale);
-
-    // Mid-right block
-    context.fillRect(centerX + 25 * scale, centerY + 25 * scale, 50 * scale, 50 * scale);
+    context.fillRect(centerX - 125 * scale, centerY - 75 * scale, 250 * scale, 50 * scale);  // Main block
+    context.fillRect(centerX - 25 * scale, centerY - 125 * scale, 50 * scale, 50 * scale);  // Top center block
+    context.fillRect(centerX - 125 * scale, centerY + 75 * scale, 50 * scale, 50 * scale);  // Bottom-left block
+    context.fillRect(centerX + 75 * scale, centerY + 75 * scale, 50 * scale, 50 * scale);  // Bottom-right block
+    context.fillRect(centerX - 75 * scale, centerY + 25 * scale, 50 * scale, 50 * scale);  // Mid-left block
+    context.fillRect(centerX + 25 * scale, centerY + 25 * scale, 50 * scale, 50 * scale);  // Mid-right block
 }
 
 function drawApp(app, isHovered = false) {
@@ -117,12 +82,18 @@ function drawApp(app, isHovered = false) {
     }
     context.fillStyle = app.color;
     let size = isHovered ? 100 : 80;
-    let offset = isHovered ? -10 : 0; // Center the enlarged app
+    let offset = isHovered ? -10 : 0;
     context.fillRect(app.x + offset, app.y + offset, size, size);
 }
 
+function drawNameText() {
+    // Set font properties for the name text
+    context.font = "30px Arial";
+    context.fillStyle = nameColor;
+    context.fillText("Sabrine Ziyani", 50, 50);  // Position the text at the top-left corner
+}
+
 function handleMouseMove(event) {
-    // Get mouse position relative to the canvas
     const rect = canvas.getBoundingClientRect();
     const mouseX = event.clientX - rect.left;
     const mouseY = event.clientY - rect.top;
@@ -130,47 +101,50 @@ function handleMouseMove(event) {
     // Clear the canvas and redraw everything
     context.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Draw the interactive background
+    // Draw the interactive background (changes with mouse movement)
     drawBackground(mouseX, mouseY);
 
-    // Redraw the phone and check for hover on apps
+    // Redraw the phone and apps
     drawPhone();
 
     apps.forEach(app => {
-        // Only hover if the mouse is within the app 
-        let isHovered = mouseX >= app.x && mouseX <= app.x + app.width &&
-            mouseY >= app.y && mouseY <= app.y + app.height;
-
-        // Only redraw the app if it is hovered
+        let isHovered = mouseX >= app.x && mouseX <= app.x + app.width && mouseY >= app.y && mouseY <= app.y + app.height;
         drawApp(app, isHovered);
     });
 
-    // Redraw the Space Invader in the bottom-right corner
+    // Redraw the Space Invader and name text
     drawSpaceinvader();
+    drawNameText();
 }
 
 function handleMouseClick(event) {
-    // Get mouse position to the canvas
     const rect = canvas.getBoundingClientRect();
     const mouseX = event.clientX - rect.left;
     const mouseY = event.clientY - rect.top;
 
-    // Check if the click is inside the home button 
     const isHomeButtonClicked = mouseX >= homeButton.x && mouseX <= homeButton.x + homeButton.width &&
         mouseY >= homeButton.y && mouseY <= homeButton.y + homeButton.height;
 
     if (isHomeButtonClicked) {
-        // Changes the color of all apps
-        apps.forEach(app => {
-            app.color = getRandomColor();
-        });
+        apps.forEach(app => app.color = getRandomColor());
 
-        // Redraw the phone and apps without clearing the Space Invader
         context.clearRect(0, 0, canvas.width, canvas.height);
-        drawBackground(mouseX, mouseY);
         drawPhone();
-        // Redraw the Space Invader (it will still be in the bottom-right corner)
         drawSpaceinvader();
+        drawNameText();
     }
 }
+
+function drawBackground(mouseX, mouseY) {
+    const gradient = context.createRadialGradient(mouseX, mouseY, 50, mouseX, mouseY, 300);
+    gradient.addColorStop(0, getRandomColor());
+    gradient.addColorStop(1, "#000000");
+
+    context.fillStyle = gradient;
+    context.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Change the color of the name when the mouse moves
+    nameColor = getRandomColor();
+}
+
 

@@ -7,7 +7,8 @@ const apps = [];
 const homeButton = { x: 690, y: 530, width: 50, height: 50 };
 
 // Store the default color of the "name" text
-let nameColor = "black"; // 
+let nameColor = "black";
+let gradientBackground; // Variable to store the gradient background
 
 setup();
 drawPhone();
@@ -39,7 +40,10 @@ function drawPhone() {
     context.fillRect(550, 100, 350, 500);
     context.fillStyle = 'white';
     context.fillRect(560, 110, 330, 480);
+    context.fillStyle = 'black';
+    context.fillRect(560, 510, 330, 10);
 
+    // Draw apps with random colors
     for (let i = 0; i < 4; i++) {
         for (let j = 0; j < 3; j++) {
             let x = 585 + j * 100;
@@ -50,6 +54,7 @@ function drawPhone() {
         }
     }
 
+    // Draw button
     context.fillStyle = 'black';
     context.fillRect(homeButton.x, homeButton.y, homeButton.width, homeButton.height);
 }
@@ -98,8 +103,12 @@ function handleMouseMove(event) {
     const mouseX = event.clientX - rect.left;
     const mouseY = event.clientY - rect.top;
 
-    // Clear the canvas and redraw everything
+    // Only redraw the phone, apps, Space Invader, and name text on mouse move
     context.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Redraw the saved gradient background
+    context.fillStyle = gradientBackground;
+    context.fillRect(0, 0, canvas.width, canvas.height);
 
     // Draw the interactive background (changes with mouse movement)
     drawBackground(mouseX, mouseY);
@@ -128,7 +137,7 @@ function handleMouseClick(event) {
     if (isHomeButtonClicked) {
         apps.forEach(app => app.color = getRandomColor());
 
-        context.clearRect(0, 0, canvas.width, canvas.height);
+        // Redraw everything without clearing the background
         drawPhone();
         drawSpaceinvader();
         drawNameText();
@@ -140,11 +149,17 @@ function drawBackground(mouseX, mouseY) {
     gradient.addColorStop(0, getRandomColor());
     gradient.addColorStop(1, "#000000");
 
+    // Save the gradient background 
+    gradientBackground = gradient;
+
+    // Apply the gradient to the canvas
     context.fillStyle = gradient;
     context.fillRect(0, 0, canvas.width, canvas.height);
 
     // Change the color of the name when the mouse moves
-    nameColor = getRandomColor();
+    nameColor = getRandomColor(); // Update name color on mouse move
 }
+
+
 
 
